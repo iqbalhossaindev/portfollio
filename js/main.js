@@ -283,58 +283,6 @@ function initThreeBackground() {
 }
 
 /* ══════════════════════════════════════════════
-   3. CUSTOM CURSOR
-══════════════════════════════════════════════ */
-function initCursor() {
-  const isDesktop = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-  if (!isDesktop) return;
-
-  const cursor = document.querySelector(".iq-red-cursor");
-  if (!cursor) return;
-
-  window.addEventListener("mousemove", function (e) {
-    cursor.style.left = e.clientX + "px";
-    cursor.style.top = e.clientY + "px";
-  });
-
-  const hoverEls = 'a, button, .magnetic, .service-card, .portfolio-item, .filter-btn, .testi-nav-btn, [role="button"], .cursor-hover';
-  
-  document.addEventListener("mouseover", function (e) {
-    if (e.target.closest(hoverEls)) {
-      cursor.classList.add("is-hover");
-    }
-    if (e.target.closest("input, textarea, select")) {
-      cursor.classList.add("is-text");
-    }
-  });
-
-  document.addEventListener("mouseout", function (e) {
-    if (e.target.closest(hoverEls)) {
-      cursor.classList.remove("is-hover");
-    }
-    if (e.target.closest("input, textarea, select")) {
-      cursor.classList.remove("is-text");
-    }
-  });
-
-  window.addEventListener("mousedown", function () {
-    cursor.classList.add("is-click");
-  });
-
-  window.addEventListener("mouseup", function () {
-    cursor.classList.remove("is-click");
-  });
-
-  document.addEventListener("mouseleave", function () {
-    cursor.classList.add("is-hidden");
-  });
-
-  document.addEventListener("mouseenter", function () {
-    cursor.classList.remove("is-hidden");
-  });
-}
-
-/* ══════════════════════════════════════════════
    4. NAVIGATION
 ══════════════════════════════════════════════ */
 function initNav() {
@@ -756,7 +704,6 @@ function initFooterYear() {
 ══════════════════════════════════════════════ */
 function initAllModules() {
   initThreeBackground();
-  initCursor();
   initNav();
   initHeroEntrance();
   initHeroRoles();
