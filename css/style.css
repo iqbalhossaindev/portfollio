@@ -1238,12 +1238,18 @@ p, li, a, .contact-channel__value { overflow-wrap: anywhere; }
   justify-content: center;
 }
 .promo-dot {
+  position: relative;
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background: var(--border);
   cursor: pointer;
   transition: all 0.3s;
+}
+.promo-dot::after {
+  content: "";
+  position: absolute;
+  inset: -15px;
 }
 .promo-dot.active {
   width: 24px;
@@ -1361,11 +1367,17 @@ p, li, a, .contact-channel__value { overflow-wrap: anywhere; }
 }
 .testi-dots { display: flex; gap: 0.5rem; }
 .testi-dot {
+  position: relative;
   width: 8px; height: 8px;
   border-radius: 50%;
   background: var(--border);
   cursor: pointer;
   transition: all 0.3s;
+}
+.testi-dot::after {
+  content: "";
+  position: absolute;
+  inset: -15px;
 }
 .testi-dot.active {
   width: 24px; border-radius: 4px;
