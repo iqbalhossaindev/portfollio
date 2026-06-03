@@ -9,6 +9,8 @@ const qs  = (s, ctx = document) => ctx.querySelector(s);
 const qsa = (s, ctx = document) => [...ctx.querySelectorAll(s)];
 const lerp = (a, b, t) => a + (b - a) * t;
 const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const isCompactViewport = () => window.innerWidth < 768;
 
 /* ══════════════════════════════════════════════
    1.  CINEMATIC SPLASH SCREEN
@@ -29,12 +31,14 @@ function initSplash() {
   function resizeSplash() {
     sw = sc.width  = window.innerWidth;
     sh = sc.height = window.innerHeight;
-    sParticles = Array.from({ length: 60 }, () => ({
+    const splashCount = prefersReducedMotion ? 10 : (isCompactViewport() ? 14 : 22);
+    sParticles = Array.from({ length: splashCount }, () => ({
       x: Math.random() * sw, y: Math.random() * sh,
-      vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35,
-      r: Math.random() * 1.8 + .4,
+      vx: (Math.random() - .5) * .22,
+      vy: (Math.random() - .5) * .22,
+      r: Math.random() * 1.4 + .35,
       c: ['#00d4ff','#8b5cf6','#e040fb','#f59e0b'][Math.floor(Math.random()*4)],
-      a: Math.random() * .5 + .1,
+      a: Math.random() * .35 + .08,
     }));
   }
   resizeSplash();
@@ -54,7 +58,7 @@ function initSplash() {
       sctx.fill();
     });
   }
-  tickSplash();
+  if (!prefersReducedMotion) tickSplash();
 
   /* Animate progress bar, then trigger expand */
   let pct = 0;
@@ -101,8 +105,76 @@ function initThreeBackground() {
   const canvas = qs('#threeCanvas');
   if (!canvas) return;
 
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+  function createStarTexture() {
+    const texCanvas = document.createElement('canvas');
+    texCanvas.width = 128;
+    texCanvas.height = 128;
+    const ctx = texCanvas.getContext('2d');
+    if (!ctx) return null;
+
+    const cx = texCanvas.width / 2;
+    const cy = texCanvas.height / 2;
+    const outer = 42;
+    const inner = 18;
+
+    ctx.clearRect(0, 0, texCanvas.width, texCanvas.height);
+
+    const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, 60);
+    glow.addColorStop(0, 'rgba(255,255,255,1)');
+    glow.addColorStop(0.2, 'rgba(255,255,255,0.95)');
+    glow.addColorStop(0.45, 'rgba(255,255,255,0.35)');
+    glow.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 60, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.beginPath();
+    for (let i = 0; i < 10; i++) {
+      const angle = -Math.PI / 2 + i * Math.PI / 5;
+      const radius = i % 2 === 0 ? outer : inner;
+      const x = Math.cos(angle) * radius;
+      const y = Math.sin(angle) * radius;
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+
+    const starGlow = ctx.createRadialGradient(0, 0, 2, 0, 0, 44);
+    starGlow.addColorStop(0, 'rgba(255,255,255,1)');
+    starGlow.addColorStop(0.32, 'rgba(255,255,255,0.92)');
+    starGlow.addColorStop(0.58, 'rgba(255,255,255,0.35)');
+    starGlow.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = starGlow;
+    ctx.fill();
+
+    ctx.lineWidth = 2.5;
+    ctx.strokeStyle = 'rgba(255,255,255,0.95)';
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(cx - 38, cy);
+    ctx.lineTo(cx - 8, cy);
+    ctx.moveTo(cx + 8, cy);
+    ctx.lineTo(cx + 38, cy);
+    ctx.moveTo(cx, cy - 38);
+    ctx.lineTo(cx, cy - 8);
+    ctx.moveTo(cx, cy + 8);
+    ctx.lineTo(cx, cy + 38);
+    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+    ctx.stroke();
+    ctx.restore();
+
+    const texture = new THREE.CanvasTexture(texCanvas);
+    texture.needsUpdate = true;
+    return texture;
+  }
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, isCompactViewport() ? 1 : 1.25));
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setClearColor(0x000000, 0);
 
@@ -111,7 +183,7 @@ function initThreeBackground() {
   camera.position.z = 80;
 
   /* Particle field */
-  const COUNT    = window.innerWidth < 768 ? 800 : 1800;
+  const COUNT    = prefersReducedMotion ? 120 : (isCompactViewport() ? 210 : 600);
   const geom     = new THREE.BufferGeometry();
   const positions = new Float32Array(COUNT * 3);
   const colors    = new Float32Array(COUNT * 3);
@@ -131,19 +203,23 @@ function initThreeBackground() {
     colors[i*3]   = col.r;
     colors[i*3+1] = col.g;
     colors[i*3+2] = col.b;
-    sizes[i] = Math.random() * 1.8 + 0.5;
+    sizes[i] = Math.random() * 1.4 + 0.45;
   }
   geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   geom.setAttribute('color',    new THREE.BufferAttribute(colors,    3));
   geom.setAttribute('size',     new THREE.BufferAttribute(sizes,     1));
 
+  const particleTexture = createStarTexture();
   const mat = new THREE.PointsMaterial({
-    size: 1.0,
+    size: isCompactViewport() ? 1.25 : 1.4,
     vertexColors: true,
     transparent: true,
-    opacity: 0.55,
+    opacity: prefersReducedMotion ? 0.62 : 0.72,
     sizeAttenuation: true,
     depthWrite: false,
+    map: particleTexture || null,
+    alphaTest: 0.02,
+    blending: THREE.AdditiveBlending,
   });
   const points = new THREE.Points(geom, mat);
   scene.add(points);
@@ -160,6 +236,7 @@ function initThreeBackground() {
   const sphere1 = addWireSphere(30, 0x00d4ff,  45, -15, -30);
   const sphere2 = addWireSphere(22, 0x8b5cf6, -40,  20, -50);
   const sphere3 = addWireSphere(18, 0xe040fb,   5,  35, -20);
+  const animationScale = prefersReducedMotion ? 0.45 : 1;
 
   /* Mouse parallax */
   let mx = 0, my = 0, targetX = 0, targetY = 0;
@@ -184,25 +261,25 @@ function initThreeBackground() {
     frame++;
     requestAnimationFrame(tick);
 
-    targetX = lerp(targetX, mx, 0.04);
-    targetY = lerp(targetY, my, 0.04);
+    targetX = lerp(targetX, mx, 0.025);
+    targetY = lerp(targetY, my, 0.025);
 
-    points.rotation.y  = frame * 0.00025 + targetX * 0.12;
-    points.rotation.x  = frame * 0.00015 + targetY * 0.08;
-    sphere1.rotation.y = frame * 0.004;
-    sphere1.rotation.x = frame * 0.003;
-    sphere2.rotation.y = -frame * 0.003;
-    sphere2.rotation.z = frame * 0.002;
-    sphere3.rotation.x = frame * 0.0025;
-    sphere3.rotation.y = frame * 0.005;
+    points.rotation.y  = frame * 0.00018 * animationScale + targetX * 0.08;
+    points.rotation.x  = frame * 0.00011 * animationScale + targetY * 0.05;
+    sphere1.rotation.y = frame * 0.0025 * animationScale;
+    sphere1.rotation.x = frame * 0.0018 * animationScale;
+    sphere2.rotation.y = -frame * 0.0019 * animationScale;
+    sphere2.rotation.z = frame * 0.0012 * animationScale;
+    sphere3.rotation.x = frame * 0.0015 * animationScale;
+    sphere3.rotation.y = frame * 0.003 * animationScale;
 
     /* Scroll: move particles deeper */
-    camera.position.z = 80 - scrollY * 0.03;
-    camera.position.y =  scrollY * 0.015;
+    camera.position.z = 80 - scrollY * 0.02;
+    camera.position.y =  scrollY * 0.01;
 
     renderer.render(scene, camera);
   }
-  tick();
+  if (!prefersReducedMotion) tick();
 }
 
 /* ══════════════════════════════════════════════
@@ -314,7 +391,7 @@ function initScrollAnimations() {
                 el.classList.contains('reveal-fade')  ? {}         : { y: 55 };
     const delay = parseFloat(el.style.getPropertyValue('--delay') || '0') * 0.13;
     gsap.fromTo(el, { opacity:0, ...dir },
-      { opacity:1, x:0, y:0, duration:.9,
+      { opacity:1, x:0, y:0, duration:.75,
         ease:'power3.out', delay,
         scrollTrigger: { trigger: el, start:'top 88%', once: true }
       }
@@ -323,15 +400,15 @@ function initScrollAnimations() {
 
   /* HERO parallax on scroll */
   gsap.to('#heroTitle', {
-    y: -60, ease:'none',
+    y: -36, ease:'none',
     scrollTrigger: { trigger:'#hero', start:'top top', end:'bottom top', scrub: 1 }
   });
   gsap.to('.hero__depth-back', {
-    y: 40, ease:'none',
-    scrollTrigger: { trigger:'#hero', start:'top top', end:'bottom top', scrub: 1.5 }
+    y: 24, ease:'none',
+    scrollTrigger: { trigger:'#hero', start:'top top', end:'bottom top', scrub: 1.2 }
   });
   gsap.to('#heroSub', {
-    y: -30, opacity:.2, ease:'none',
+    y: -18, opacity:.2, ease:'none',
     scrollTrigger: { trigger:'#hero', start:'top top', end:'60% top', scrub: 1 }
   });
 
@@ -339,7 +416,7 @@ function initScrollAnimations() {
   qsa('.service-card').forEach((card, i) => {
     gsap.fromTo(card,
       { opacity:0, y:80, rotateX:12, transformPerspective:800 },
-      { opacity:1, y:0,  rotateX:0, duration:1, ease:'power3.out', delay: i * 0.15,
+      { opacity:1, y:0,  rotateX:0, duration:.85, ease:'power3.out', delay: i * 0.11,
         scrollTrigger: { trigger: card, start:'top 86%', once: true }
       }
     );
@@ -349,7 +426,7 @@ function initScrollAnimations() {
   qsa('.stat-item').forEach((item, i) => {
     gsap.fromTo(item,
       { opacity:0, y:40, scale:.94 },
-      { opacity:1, y:0,  scale:1, duration:.8, ease:'back.out(1.5)', delay: i * 0.12,
+      { opacity:1, y:0,  scale:1, duration:.7, ease:'power2.out', delay: i * 0.09,
         scrollTrigger: { trigger: item, start:'top 88%', once: true }
       }
     );
@@ -359,7 +436,7 @@ function initScrollAnimations() {
   qsa('.portfolio-item').forEach((item, i) => {
     gsap.fromTo(item,
       { opacity:0, y:50, scale:.96 },
-      { opacity:1, y:0, scale:1, duration:.85, ease:'power3.out', delay: i * 0.07,
+      { opacity:1, y:0, scale:1, duration:.75, ease:'power3.out', delay: i * 0.05,
         scrollTrigger: { trigger: '#portfolioGrid', start:'top 86%', once: true }
       }
     );
@@ -369,7 +446,7 @@ function initScrollAnimations() {
   qsa('.process-step').forEach((step, i) => {
     gsap.fromTo(step,
       { opacity:0, y:50, rotateY: i % 2 === 0 ? -8 : 8 },
-      { opacity:1, y:0, rotateY:0, duration:1, ease:'power3.out',
+      { opacity:1, y:0, rotateY:0, duration:.85, ease:'power3.out',
         scrollTrigger: { trigger: step, start:'top 88%', once: true }
       }
     );
@@ -378,7 +455,7 @@ function initScrollAnimations() {
   /* Testimonial cards */
   gsap.fromTo('.testi-card',
     { opacity:0, x:60 },
-    { opacity:1, x:0, duration:.8, ease:'power3.out', stagger:.15,
+    { opacity:1, x:0, duration:.75, ease:'power3.out', stagger:.12,
       scrollTrigger: { trigger:'#testimonials', start:'top 80%', once: true }
     }
   );
@@ -511,7 +588,64 @@ function initPortfolio() {
 }
 
 /* ══════════════════════════════════════════════
-   14. TESTIMONIALS CAROUSEL
+   14. PROMO SLIDER
+══════════════════════════════════════════════ */
+function initPromoSlider() {
+  const track = qs('#promoTrack');
+  const prev  = qs('#promoPrev');
+  const next  = qs('#promoNext');
+  const dotsC = qs('#promoDots');
+  if (!track) return;
+
+  const slides = qsa('.promo-slide', track);
+  if (!slides.length) return;
+
+  let current = 0;
+  let autoplay;
+
+  slides.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.className = 'promo-dot' + (i === 0 ? ' active' : '');
+    d.setAttribute('role', 'tab');
+    d.setAttribute('aria-label', `Promo slide ${i + 1}`);
+    d.addEventListener('click', () => goTo(i));
+    dotsC?.appendChild(d);
+  });
+
+  function goTo(n) {
+    current = clamp(n, 0, slides.length - 1);
+    const slideW = track.clientWidth || slides[0].clientWidth || 0;
+    track.style.transform = `translateX(-${current * slideW}px)`;
+    qsa('.promo-dot', dotsC).forEach((d, i) => d.classList.toggle('active', i === current));
+    resetAuto();
+  }
+
+  function resetAuto() {
+    clearInterval(autoplay);
+    autoplay = setInterval(() => goTo((current + 1) % slides.length), 5500);
+  }
+
+  prev?.addEventListener('click', () => goTo((current - 1 + slides.length) % slides.length));
+  next?.addEventListener('click', () => goTo((current + 1) % slides.length));
+  window.addEventListener('resize', () => goTo(current), { passive: true });
+
+  let dragStart = 0;
+  track.addEventListener('mousedown', e => { dragStart = e.clientX; });
+  track.addEventListener('touchstart', e => { dragStart = e.touches[0].clientX; }, { passive: true });
+  track.addEventListener('mouseup', e => {
+    const d = dragStart - e.clientX;
+    if (Math.abs(d) > 50) goTo(d > 0 ? current + 1 : current - 1);
+  });
+  track.addEventListener('touchend', e => {
+    const d = dragStart - e.changedTouches[0].clientX;
+    if (Math.abs(d) > 50) goTo(d > 0 ? current + 1 : current - 1);
+  });
+
+  resetAuto();
+}
+
+/* ══════════════════════════════════════════════
+   15. TESTIMONIALS CAROUSEL
 ══════════════════════════════════════════════ */
 function initTestimonials() {
   const track = qs('#testiTrack');
@@ -569,7 +703,7 @@ function initTestimonials() {
 }
 
 /* ══════════════════════════════════════════════
-   15. CONTACT FORM
+   16. CONTACT FORM
 ══════════════════════════════════════════════ */
 function initContactForm() {
   const form    = qs('#contactForm');
@@ -588,7 +722,7 @@ function initContactForm() {
 }
 
 /* ══════════════════════════════════════════════
-   16. FOOTER YEAR
+   17. FOOTER YEAR
 ══════════════════════════════════════════════ */
 function initFooterYear() {
   const el = qs('#footerYear');
@@ -611,6 +745,7 @@ function initAllModules() {
   initSkillBars();
   initCounters();
   initPortfolio();
+  initPromoSlider();
   initTestimonials();
   initContactForm();
   initFooterYear();
