@@ -286,29 +286,51 @@ function initThreeBackground() {
    3. CUSTOM CURSOR
 ══════════════════════════════════════════════ */
 function initCursor() {
-  const dot  = qs('#cursorDot');
-  const ring = qs('#cursorRing');
-  if (!dot || !ring) return;
-  if (window.innerWidth < 768 || window.matchMedia('(hover: none)').matches) return;
+  const isDesktop = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  if (!isDesktop) return;
 
-  let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
+  const cursor = document.querySelector(".iq-red-cursor");
+  if (!cursor) return;
 
-  function moveCursor() {
-    dot.style.left = mx + 'px';
-    dot.style.top  = my + 'px';
-    rx = lerp(rx, mx, 0.12);
-    ry = lerp(ry, my, 0.12);
-    ring.style.left = rx + 'px';
-    ring.style.top  = ry + 'px';
-    requestAnimationFrame(moveCursor);
-  }
-  moveCursor();
+  window.addEventListener("mousemove", function (e) {
+    cursor.style.left = e.clientX + "px";
+    cursor.style.top = e.clientY + "px";
+  });
 
-  const hoverEls = 'a, button, .magnetic, .service-card, .portfolio-item, .filter-btn, .testi-nav-btn';
-  document.querySelectorAll(hoverEls).forEach(el => {
-    el.addEventListener('mouseenter', () => ring.classList.add('hover'));
-    el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
+  const hoverEls = 'a, button, .magnetic, .service-card, .portfolio-item, .filter-btn, .testi-nav-btn, [role="button"], .cursor-hover';
+  
+  document.addEventListener("mouseover", function (e) {
+    if (e.target.closest(hoverEls)) {
+      cursor.classList.add("is-hover");
+    }
+    if (e.target.closest("input, textarea, select")) {
+      cursor.classList.add("is-text");
+    }
+  });
+
+  document.addEventListener("mouseout", function (e) {
+    if (e.target.closest(hoverEls)) {
+      cursor.classList.remove("is-hover");
+    }
+    if (e.target.closest("input, textarea, select")) {
+      cursor.classList.remove("is-text");
+    }
+  });
+
+  window.addEventListener("mousedown", function () {
+    cursor.classList.add("is-click");
+  });
+
+  window.addEventListener("mouseup", function () {
+    cursor.classList.remove("is-click");
+  });
+
+  document.addEventListener("mouseleave", function () {
+    cursor.classList.add("is-hidden");
+  });
+
+  document.addEventListener("mouseenter", function () {
+    cursor.classList.remove("is-hidden");
   });
 }
 

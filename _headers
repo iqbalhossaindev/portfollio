@@ -20,6 +20,15 @@
 /*.svg
   Cache-Control: public, max-age=31536000, immutable
 
+/*.webp
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.jpg
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.jpeg
+  Cache-Control: public, max-age=31536000, immutable
+
 /manifest.json
   Content-Type: application/manifest+json
   Cache-Control: public, max-age=0, must-revalidate

@@ -13,7 +13,7 @@
   <meta name="theme-color" content="#04030a" />
   <meta name="color-scheme" content="dark" />
   <link rel="canonical" href="https://theiqbal.com/" />
-  <link rel="preload" as="image" href="Webpage.png" />
+  <link rel="preload" as="image" href="Webpage.webp" />
   <link rel="preconnect" href="https://api.fontshare.com" />
   <meta property="og:type" content="profile" />
   <meta property="og:url" content="https://theiqbal.com/" />
@@ -32,12 +32,47 @@
   <style id="critical">
     .footer__social{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;margin-top:.25rem}
   </style>
-  <link rel="stylesheet" href="css/style.css?v=20260428-responsive-general" />
+  <link rel="stylesheet" href="css/style.min.css?v=20260428-responsive-general" />
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","@id":"https://theiqbal.com/#person","name":"Iqbal Hossain","url":"https://theiqbal.com/","email":"hello@theiqbal.com","telephone":"+447575870396","jobTitle":["Graphic Designer","Digital Marketer","SEO Specialist","Cyber Security Consultant"],"sameAs":["https://iqbalhossain.bio.link/","https://www.facebook.com/iqbalhossainid","https://www.instagram.com/iqbalhossainfs","https://x.com/iqbalhossainfs","https://www.linkedin.com/in/iqbalhossainfs","https://youtube.com/@iqbalhossainfs","https://maps.app.goo.gl/FyDeiEn2yHPW57Er7"]}</script>
 </head>
 <body>
-  <div class="cursor-dot" id="cursorDot"></div>
-  <div class="cursor-ring" id="cursorRing"></div>
+  <div class="iq-red-cursor">
+    <span class="iq-red-cursor-glow"></span>
+    <svg viewBox="0 0 48 48" aria-hidden="true">
+      <defs>
+        <linearGradient id="cursorSilver" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#ffffff" />
+          <stop offset="35%" stop-color="#d6d6d6" />
+          <stop offset="70%" stop-color="#555555" />
+          <stop offset="100%" stop-color="#151515" />
+        </linearGradient>
+        <linearGradient id="cursorBlack" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#2a2a2a" />
+          <stop offset="45%" stop-color="#080808" />
+          <stop offset="100%" stop-color="#000000" />
+        </linearGradient>
+        <linearGradient id="cursorRed" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#ff3030" />
+          <stop offset="55%" stop-color="#d40000" />
+          <stop offset="100%" stop-color="#6e0000" />
+        </linearGradient>
+      </defs>
+      <!-- Silver outer blade -->
+      <path class="cursor-outer" d="M5 3L40 15C32 18 26 25 22 34L17 45C15 33 10 17 5 3Z" />
+      <!-- Black body -->
+      <path class="cursor-body" d="M10 9L35 16.5C28 20 23.4 25.5 20 34L16.8 40C15 29 12.5 18 10 9Z" />
+      <!-- Red inner blade -->
+      <path class="cursor-red-main" d="M12.5 10.5L29.5 16.2C24.4 19.2 20.8 24.2 18.3 31.5C16.4 23.5 14.5 16.3 12.5 10.5Z" />
+      <!-- Red glossy segments -->
+      <path class="cursor-red-line" d="M16 13.7L27.7 17.4" />
+      <path class="cursor-red-line" d="M17.4 18.4L24.8 21" />
+      <path class="cursor-red-line" d="M18.5 23L22.2 24.2" />
+      <!-- Silver left edge -->
+      <path class="cursor-edge" d="M5 3L10 9C12.5 18 15 29 17 45C14.4 32.8 9.6 16.8 5 3Z" />
+      <!-- Small shine -->
+      <path class="cursor-shine" d="M9.3 7.5L22.5 12.1L16.1 13.5L11.3 20.2C10.8 16.1 10.1 11.7 9.3 7.5Z" />
+    </svg>
+  </div>
 
   <!-- ═══ SPLASH SCREEN ═══ -->
   <div id="splash" aria-hidden="true" role="presentation">
@@ -50,7 +85,7 @@
         <div class="splash__aiRing2"></div>
         <div class="splash__halo"></div>
         <div class="splash__photo-wrap">
-          <img src="Spash.jpg" alt="Iqbal Hossain" class="splash__photo" width="220" height="220" fetchpriority="high" />
+          <img src="Spash.webp" alt="Iqbal Hossain" class="splash__photo" width="220" height="220" fetchpriority="high" />
           <div class="splash__veil" id="splashVeil"></div>
         </div>
       </div>
@@ -111,7 +146,7 @@
       </div>
       <p class="hero__sub" id="heroSub">
         Crafting visual identities, scaling brands digitally,<br>
-        and securing the digital frontier — all under one roof.
+        and securing the digital frontier - all under one roof.
       </p>
       <div class="hero__actions" id="heroActions">
         <a href="#portfolio" class="btn btn--primary magnetic"><span>Explore Work</span>
@@ -158,7 +193,7 @@
       <div class="about__grid">
         <div class="about__image-wrap reveal-left">
           <div class="about__img-frame">
-          <img id="iqbal-hossain-photo" src="Webpage.png" alt="Iqbal Hossain" class="about__img" width="900" height="1017" loading="eager" fetchpriority="high" decoding="async" />
+          <img id="iqbal-hossain-photo" src="Webpage.webp" alt="Iqbal Hossain" class="about__img" width="900" height="1017" loading="eager" fetchpriority="high" decoding="async" />
             <div class="about__img-glow" aria-hidden="true"></div>
           </div>
           <div class="about__exp-badge" aria-label="5 plus years experience">
@@ -172,16 +207,16 @@
           <p class="about__bio">Hi, I’m <strong>Iqbal Hossain</strong>, a Web Designer and Digital Marketer. I help businesses build a strong online presence through modern web design, UI/UX design, graphic design, SEO, and digital marketing.</p>
           <p class="about__bio">My goal is to create clean, responsive, and professional digital solutions that help brands look better, reach more people, and grow online. I focus on simple design, clear user experience, and result-driven strategies.</p>
           <p class="about__bio">Whether you need a business website, brand visuals, SEO support, or digital marketing services, I can help you create a strong and trusted online identity.</p>
-          <div class="about__skills" role="list" aria-label="Skills">
-            <div class="skill-item" role="listitem">
+          <div class="about__skills" aria-label="Skills">
+            <div class="skill-item">
               <div class="skill-info"><span>Brand &amp; Visual Design</span><span>95%</span></div>
               <div class="skill-bar" role="progressbar" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"><div class="skill-fill" data-width="95"></div></div>
             </div>
-            <div class="skill-item" role="listitem">
+            <div class="skill-item">
               <div class="skill-info"><span>Digital Marketing &amp; SEO</span><span>90%</span></div>
               <div class="skill-bar" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"><div class="skill-fill" data-width="90"></div></div>
             </div>
-            <div class="skill-item" role="listitem">
+            <div class="skill-item">
               <div class="skill-info"><span>Cyber Security</span><span>88%</span></div>
               <div class="skill-bar" role="progressbar" aria-valuenow="88" aria-valuemin="0" aria-valuemax="100"><div class="skill-fill" data-width="88"></div></div>
             </div>
@@ -201,8 +236,8 @@
         <h2 class="section-title reveal-up" id="services-heading">Services That <em>Deliver Results</em></h2>
         <p class="section-sub reveal-up">Three disciplines. One expert. Infinite possibilities.</p>
       </div>
-      <div class="services__grid" role="list">
-        <article class="service-card service-card--design tilt-card reveal-up" role="listitem" aria-labelledby="svc-design-title" style="--delay:0">
+      <div class="services__grid">
+        <article class="service-card service-card--design tilt-card reveal-up" aria-labelledby="svc-design-title" style="--delay:0">
           <div class="service-card__glow"></div>
           <div class="service-card__icon" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="6.5" cy="11.5" r="2.5"/><circle cx="13.5" cy="17.5" r="2.5"/><path d="M2 22l10-10M22 2l-5 5"/></svg></div>
           <div class="service-card__num">01</div>
@@ -211,7 +246,7 @@
           <ul class="service-card__list" role="list"><li>Brand Identity &amp; Logo Design</li><li>UI/UX &amp; Web Design</li><li>Social Media Graphics</li><li>Print &amp; Packaging Design</li><li>Motion Graphics</li></ul>
           <a href="#contact" class="service-card__cta">Get a Quote <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
         </article>
-        <article class="service-card service-card--marketing tilt-card reveal-up" role="listitem" aria-labelledby="svc-mkt-title" style="--delay:1">
+        <article class="service-card service-card--marketing tilt-card reveal-up" aria-labelledby="svc-mkt-title" style="--delay:1">
           <div class="service-card__glow"></div>
           <div class="service-card__icon" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/><circle cx="12" cy="12" r="1"/></svg></div>
           <div class="service-card__num">02</div>
@@ -220,7 +255,7 @@
           <ul class="service-card__list" role="list"><li>SEO &amp; Search Optimization</li><li>Social Media Marketing</li><li>PPC &amp; Paid Advertising</li><li>Email Marketing Campaigns</li><li>Content Strategy &amp; Analytics</li></ul>
           <a href="#contact" class="service-card__cta">Get a Quote <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
         </article>
-        <article class="service-card service-card--security tilt-card reveal-up" role="listitem" aria-labelledby="svc-sec-title" style="--delay:2">
+        <article class="service-card service-card--security tilt-card reveal-up" aria-labelledby="svc-sec-title" style="--delay:2">
           <div class="service-card__glow"></div>
           <div class="service-card__icon" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div>
           <div class="service-card__num">03</div>
@@ -237,11 +272,11 @@
   <section class="stats" id="stats" aria-label="Achievement Statistics">
     <div class="stats__bg" aria-hidden="true"></div>
     <div class="container">
-      <div class="stats__grid" role="list">
-        <div class="stat-item reveal-up" role="listitem" style="--delay:0"><div class="stat-num" data-target="5" data-suffix="+">0+</div><div class="stat-label">Years of Experience</div></div>
-        <div class="stat-item reveal-up" role="listitem" style="--delay:1"><div class="stat-num" data-target="150" data-suffix="+">0+</div><div class="stat-label">Projects Delivered</div></div>
-        <div class="stat-item reveal-up" role="listitem" style="--delay:2"><div class="stat-num" data-target="60" data-suffix="+">0+</div><div class="stat-label">Happy Clients</div></div>
-        <div class="stat-item reveal-up" role="listitem" style="--delay:3"><div class="stat-num" data-target="100" data-suffix="%">0%</div><div class="stat-label">Client Satisfaction</div></div>
+      <div class="stats__grid">
+        <div class="stat-item reveal-up" style="--delay:0"><div class="stat-num" data-target="5" data-suffix="+">0+</div><div class="stat-label">Years of Experience</div></div>
+        <div class="stat-item reveal-up" style="--delay:1"><div class="stat-num" data-target="150" data-suffix="+">0+</div><div class="stat-label">Projects Delivered</div></div>
+        <div class="stat-item reveal-up" style="--delay:2"><div class="stat-num" data-target="60" data-suffix="+">0+</div><div class="stat-label">Happy Clients</div></div>
+        <div class="stat-item reveal-up" style="--delay:3"><div class="stat-num" data-target="100" data-suffix="%">0%</div><div class="stat-label">Client Satisfaction</div></div>
       </div>
     </div>
   </section>
@@ -283,7 +318,7 @@
       <div class="promo__track-wrap">
         <div class="promo__track" id="promoTrack">
           <article class="promo-slide" data-title="Digital Services for Modern Brands" data-kicker="Overview">
-            <img src="assets/promo/promo-digital-services.png" alt="Digital Services for Modern Brands promotional graphic" class="promo-slide__image" width="1250" height="1250" loading="lazy" decoding="async" />
+            <img src="assets/promo/promo-digital-services.webp" alt="Digital Services for Modern Brands promotional graphic" class="promo-slide__image" width="1250" height="1250" loading="lazy" decoding="async" />
             <div class="promo-slide__caption">
               <span class="promo-slide__index">01</span>
               <div>
@@ -293,7 +328,7 @@
             </div>
           </article>
           <article class="promo-slide" data-title="Professional Web Design" data-kicker="Web Design">
-            <img src="assets/promo/promo-web-design.png" alt="Professional Web Design promotional graphic" class="promo-slide__image" width="1250" height="1250" loading="lazy" decoding="async" />
+            <img src="assets/promo/promo-web-design.webp" alt="Professional Web Design promotional graphic" class="promo-slide__image" width="1250" height="1250" loading="lazy" decoding="async" />
             <div class="promo-slide__caption">
               <span class="promo-slide__index">02</span>
               <div>
@@ -303,7 +338,7 @@
             </div>
           </article>
           <article class="promo-slide" data-title="Smart UI/UX Design" data-kicker="UI/UX">
-            <img src="assets/promo/promo-uiux-design.png" alt="Smart UI/UX Design promotional graphic" class="promo-slide__image" width="1250" height="1250" loading="lazy" decoding="async" />
+            <img src="assets/promo/promo-uiux-design.webp" alt="Smart UI/UX Design promotional graphic" class="promo-slide__image" width="1250" height="1250" loading="lazy" decoding="async" />
             <div class="promo-slide__caption">
               <span class="promo-slide__index">03</span>
               <div>
@@ -313,7 +348,7 @@
             </div>
           </article>
           <article class="promo-slide" data-title="Creative Graphic Design" data-kicker="Graphic Design">
-            <img src="assets/promo/promo-graphic-design.png" alt="Creative Graphic Design promotional graphic" class="promo-slide__image" width="1250" height="1250" loading="lazy" decoding="async" />
+            <img src="assets/promo/promo-graphic-design.webp" alt="Creative Graphic Design promotional graphic" class="promo-slide__image" width="1250" height="1250" loading="lazy" decoding="async" />
             <div class="promo-slide__caption">
               <span class="promo-slide__index">04</span>
               <div>
@@ -323,7 +358,7 @@
             </div>
           </article>
           <article class="promo-slide" data-title="Powerful SEO Services" data-kicker="SEO">
-            <img src="assets/promo/promo-seo-services.png" alt="Powerful SEO Services promotional graphic" class="promo-slide__image" width="1250" height="1250" loading="lazy" decoding="async" />
+            <img src="assets/promo/promo-seo-services.webp" alt="Powerful SEO Services promotional graphic" class="promo-slide__image" width="1250" height="1250" loading="lazy" decoding="async" />
             <div class="promo-slide__caption">
               <span class="promo-slide__index">05</span>
               <div>
@@ -333,7 +368,7 @@
             </div>
           </article>
           <article class="promo-slide" data-title="Digital Marketing That Works" data-kicker="Marketing">
-            <img src="assets/promo/promo-digital-marketing.png" alt="Digital Marketing That Works promotional graphic" class="promo-slide__image" width="1250" height="1250" loading="lazy" decoding="async" />
+            <img src="assets/promo/promo-digital-marketing.webp" alt="Digital Marketing That Works promotional graphic" class="promo-slide__image" width="1250" height="1250" loading="lazy" decoding="async" />
             <div class="promo-slide__caption">
               <span class="promo-slide__index">06</span>
               <div>
@@ -359,14 +394,14 @@
         <div class="section-label reveal-fade">— How I Work</div>
         <h2 class="section-title reveal-up" id="process-heading">The Process Behind <em>Great Results</em></h2>
       </div>
-      <div class="process__steps" role="list">
-        <div class="process-step reveal-up" role="listitem" style="--delay:0"><div class="process-step__num">01</div><div class="process-step__icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><h3>Discovery &amp; Brief</h3><p>Deep dive into your goals, audience, and challenges. No assumptions — just clarity.</p></div>
+      <div class="process__steps">
+        <div class="process-step reveal-up" style="--delay:0"><div class="process-step__num">01</div><div class="process-step__icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><h3>Discovery &amp; Brief</h3><p>Deep dive into your goals, audience, and challenges. No assumptions — just clarity.</p></div>
         <div class="process-step__arrow" aria-hidden="true">→</div>
-        <div class="process-step reveal-up" role="listitem" style="--delay:1"><div class="process-step__num">02</div><div class="process-step__icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div><h3>Strategy &amp; Planning</h3><p>Craft a tailored roadmap combining creative and technical thinking for maximum impact.</p></div>
+        <div class="process-step reveal-up" style="--delay:1"><div class="process-step__num">02</div><div class="process-step__icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div><h3>Strategy &amp; Planning</h3><p>Craft a tailored roadmap combining creative and technical thinking for maximum impact.</p></div>
         <div class="process-step__arrow" aria-hidden="true">→</div>
-        <div class="process-step reveal-up" role="listitem" style="--delay:2"><div class="process-step__num">03</div><div class="process-step__icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><h3>Execute &amp; Deliver</h3><p>Meticulous execution with regular updates. Delivered on time, every time.</p></div>
+        <div class="process-step reveal-up" style="--delay:2"><div class="process-step__num">03</div><div class="process-step__icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><h3>Execute &amp; Deliver</h3><p>Meticulous execution with regular updates. Delivered on time, every time.</p></div>
         <div class="process-step__arrow" aria-hidden="true">→</div>
-        <div class="process-step reveal-up" role="listitem" style="--delay:3"><div class="process-step__num">04</div><div class="process-step__icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><h3>Measure &amp; Optimize</h3><p>Track results, analyze data, and iterate for continuous improvement beyond launch.</p></div>
+        <div class="process-step reveal-up" style="--delay:3"><div class="process-step__num">04</div><div class="process-step__icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><h3>Measure &amp; Optimize</h3><p>Track results, analyze data, and iterate for continuous improvement beyond launch.</p></div>
       </div>
     </div>
   </section>
@@ -404,11 +439,11 @@
           <div class="section-label">— Get In Touch</div>
           <h2 class="section-title" id="contact-heading">Let's Build<br><em>Something</em><br>Remarkable.</h2>
           <p class="contact__sub">Have a project in mind? I'm available for freelance work, consulting, and long-term collaborations. Let's make it happen.</p>
-          <div class="contact__channels" role="list">
-            <a href="https://wa.me/447575870396" target="_blank" rel="noopener noreferrer" class="contact-channel magnetic" role="listitem"><div class="contact-channel__icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.049.518 3.979 1.426 5.666L0 24l6.533-1.398A11.946 11.946 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.662-.511-5.188-1.4l-.37-.221-3.878.831.849-3.765-.242-.389A9.949 9.949 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg></div><div><span class="contact-channel__label">WhatsApp</span><span class="contact-channel__value">+44 7575 870396</span></div></a>
-            <a href="https://maps.app.goo.gl/FyDeiEn2yHPW57Er7" target="_blank" rel="noopener noreferrer" class="contact-channel magnetic" role="listitem"><div class="contact-channel__icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s6-5.1 6-10.2A6 6 0 0 0 6 10.8C6 15.9 12 21 12 21Z"/><circle cx="12" cy="10.8" r="2.2"/></svg></div><div><span class="contact-channel__label">Google Business</span><span class="contact-channel__value">View profile on Maps</span></div></a>
-            <a href="tel:+447575870396" class="contact-channel magnetic" role="listitem"><div class="contact-channel__icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6 6l.91-.95a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div><div><span class="contact-channel__label">Direct Call</span><span class="contact-channel__value">+44 7575 870396</span></div></a>
-            <a href="mailto:hello@theiqbal.com" class="contact-channel magnetic" role="listitem"><div class="contact-channel__icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div><span class="contact-channel__label">Email</span><span class="contact-channel__value">hello@theiqbal.com</span></div></a>
+          <div class="contact__channels">
+            <a href="https://wa.me/447575870396" target="_blank" rel="noopener noreferrer" class="contact-channel magnetic"><div class="contact-channel__icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.049.518 3.979 1.426 5.666L0 24l6.533-1.398A11.946 11.946 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.662-.511-5.188-1.4l-.37-.221-3.878.831.849-3.765-.242-.389A9.949 9.949 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg></div><div><span class="contact-channel__label">WhatsApp</span><span class="contact-channel__value">+44 7575 870396</span></div></a>
+            <a href="https://maps.app.goo.gl/FyDeiEn2yHPW57Er7" target="_blank" rel="noopener noreferrer" class="contact-channel magnetic"><div class="contact-channel__icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s6-5.1 6-10.2A6 6 0 0 0 6 10.8C6 15.9 12 21 12 21Z"/><circle cx="12" cy="10.8" r="2.2"/></svg></div><div><span class="contact-channel__label">Google Business</span><span class="contact-channel__value">View profile on Maps</span></div></a>
+            <a href="tel:+447575870396" class="contact-channel magnetic"><div class="contact-channel__icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6 6l.91-.95a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div><div><span class="contact-channel__label">Direct Call</span><span class="contact-channel__value">+44 7575 870396</span></div></a>
+            <a href="mailto:hello@theiqbal.com" class="contact-channel magnetic"><div class="contact-channel__icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div><span class="contact-channel__label">Email</span><span class="contact-channel__value">hello@theiqbal.com</span></div></a>
           </div>
           <div class="contact__availability"><div class="avail-dot"></div><span>Available for new projects — Response within 24h</span></div>
         </div>
@@ -464,6 +499,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
-  <script src="js/main.js?v=20260603-stars" defer></script>
+  <script src="js/main.min.js?v=20260603-stars" defer></script>
 </body>
 </html>
