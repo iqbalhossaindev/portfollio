@@ -441,7 +441,6 @@
               <path fill="none" d="M0 0h48v48H0z"/>
             </svg>
             <span class="gbp-topbar-label">Google Business Profile</span>
-            <span class="live-pill"><span class="live-dot"></span>Live</span>
           </div>
 
           <!-- profile -->
@@ -590,6 +589,31 @@
       syncIntervalMs: 30 * 60 * 1000,
       requestTimeoutMs: 12000
     };
+
+    // Cached public Google reviews from the current visible profile screenshot.
+    // These are used only when live Google API data is unavailable.
+    const CACHED_GOOGLE_REVIEWS = [
+      {
+        author_name: 'Sajib Hossain',
+        rating: 5,
+        text: 'Iqbal did an excellent job with our website. The design is mobile-friendly, fast, and very professional.'
+      },
+      {
+        author_name: 'Junaid Malik',
+        rating: 5,
+        text: 'Very professional and reliable service. The website design was clean, modern, and easy to use. Communication was smooth, and the work was completed with good attention to detail. Highly recommended for web design, SEO, and digital marketing services.'
+      },
+      {
+        author_name: 'michelle angiela pagod',
+        rating: 5,
+        text: 'Good communication and fast delivery. The branding and website design looked clean, professional, and business-focused.'
+      },
+      {
+        author_name: 'Seeiuuee',
+        rating: 5,
+        text: 'Professional, creative, and reliable. The website looks modern and works smoothly on mobile and desktop. Very happy with the final result.'
+      }
+    ];
 
     let googlePlacesService = null;
     let googleSyncTimer = null;
@@ -765,14 +789,18 @@
       const ratingScore = $('ratingScore');
       const ratingCount = $('ratingCount');
       const reviewsContainer = $('reviewsContainer');
+      const cachedReviews = CACHED_GOOGLE_REVIEWS || [];
 
-      if (ratingScore) ratingScore.textContent = '—';
+      if (ratingScore) ratingScore.textContent = '5.0';
       renderStars(5, $('starsContainer'), 18);
-      if (ratingCount) ratingCount.innerHTML = '<strong>—</strong> Google reviews';
-      if (reviewsContainer) {
-        reviewsContainer.innerHTML = '<p style="color:var(--text-muted);font-size:12px;padding:4px 2px">Live Google data is not available right now. Tap <strong>View Profile</strong> to see reviews on Google.</p>';
+      if (ratingCount) {
+        ratingCount.innerHTML = `<strong>${cachedReviews.length}</strong> cached Google reviews`;
       }
-      setSyncing(false, reason || 'Could not reach Google');
+      if (reviewsContainer) {
+        renderReviews(cachedReviews);
+      }
+      setSyncing(false, 'Showing cached Google reviews. Live Google sync is unavailable right now.');
+      if (reason) console.warn('[Google Reviews] Fallback used:', reason);
     }
 
     function fetchGooglePlace() {
