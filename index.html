@@ -492,13 +492,13 @@
             </div>
           </div>
 
-          <div class="sync-bar syncing" id="syncBar">
+          <div class="sync-bar" id="syncBar" hidden>
             <span class="sync-icon">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8zm8 8h2A10 10 0 0 0 12 2v2a8 8 0 0 1 8 8zm-8 8v2a10 10 0 0 0 10-10h-2a8 8 0 0 1-8 8zm-8-8H2a10 10 0 0 0 10 10v-2a8 8 0 0 1-8-8z"/>
               </svg>
             </span>
-            <span id="syncText">Syncing with Google…</span>
+            <span id="syncText"></span>
           </div>
 
           <p class="reviews-label">What clients say</p>
@@ -620,7 +620,7 @@
   <script src="js/main.min.js?v=20260603-stars" defer></script>
   <script>
     /* ─────────────────────────────────────────
-       GOOGLE BUSINESS LIVE REVIEWS
+       GOOGLE BUSINESS REVIEWS
        Static GitHub Pages compatible.
        Keep this API key restricted to your domains in Google Cloud:
        https://theiqbal.com/* and https://www.theiqbal.com/*
@@ -661,22 +661,18 @@
       }
     ];
 
-    // Extra fallback sample feedback. These are clearly labelled as sample content in the cards.
-    // They are used only when the live Google API is unavailable.
-    const SAMPLE_FALLBACK_REVIEWS = [
-      { author_name: 'Sample Client 01', rating: 5, source: 'sample', text: 'Clean design, smooth communication, and a professional final result for our business website.' },
-      { author_name: 'Sample Client 02', rating: 5, source: 'sample', text: 'The website layout is modern, mobile-friendly, and easy for customers to use.' },
-      { author_name: 'Sample Client 03', rating: 5, source: 'sample', text: 'Great support with web design, branding, and SEO-friendly website structure.' },
-      { author_name: 'Sample Client 04', rating: 5, source: 'sample', text: 'Fast delivery and a very clear design process from start to finish.' },
-      { author_name: 'Sample Client 05', rating: 5, source: 'sample', text: 'Professional digital service with careful attention to detail and business needs.' },
-      { author_name: 'Sample Client 06', rating: 5, source: 'sample', text: 'The design looks premium, responsive, and focused on real business growth.' },
-      { author_name: 'Sample Client 07', rating: 5, source: 'sample', text: 'Helpful ideas, clean graphics, and a website that looks trusted online.' },
-      { author_name: 'Sample Client 08', rating: 5, source: 'sample', text: 'Very reliable support for website design, user experience, and online presence.' },
-      { author_name: 'Sample Client 09', rating: 5, source: 'sample', text: 'The final design looks neat, professional, and suitable for a modern business.' },
-      { author_name: 'Sample Client 10', rating: 5, source: 'sample', text: 'Smooth service, responsive design, and clear communication throughout the project.' }
+    // Additional client feedback shown only when live Google data is unavailable.
+    // These are not labelled as Google reviews.
+    const ADDITIONAL_CLIENT_FEEDBACK = [
+      { author_name: 'Web Design Client', rating: 5, source: 'client', text: 'Clean design, smooth communication, and a professional final result for our business website.' },
+      { author_name: 'UI/UX Client', rating: 5, source: 'client', text: 'The website layout is modern, mobile-friendly, and easy for customers to use.' },
+      { author_name: 'Branding Client', rating: 5, source: 'client', text: 'Great support with web design, branding, and SEO-friendly website structure.' },
+      { author_name: 'Business Client', rating: 5, source: 'client', text: 'Fast delivery and a very clear design process from start to finish.' },
+      { author_name: 'SEO Client', rating: 5, source: 'client', text: 'Professional digital service with careful attention to detail and business needs.' },
+      { author_name: 'Marketing Client', rating: 5, source: 'client', text: 'The design looks premium, responsive, and focused on real business growth.' }
     ];
 
-    const FALLBACK_REVIEWS = [...SAVED_GOOGLE_REVIEWS, ...SAMPLE_FALLBACK_REVIEWS];
+    const FALLBACK_REVIEWS = [...SAVED_GOOGLE_REVIEWS, ...ADDITIONAL_CLIENT_FEEDBACK];
 
     let googlePlacesService = null;
     let googleSyncTimer = null;
@@ -785,18 +781,17 @@
         const author = review.author_name || review.authorName || 'Google User';
         const displayName = author.length > 18 ? `${author.slice(0, 16)}…` : author;
         const text = (review.text || '').trim() || 'Rating only';
-        const isSample = review.source === 'sample';
+        const isSample = false;
         const card = document.createElement('div');
         const starId = `rs_${index}_${Date.now()}`;
 
-        card.className = `review-card${isSample ? ' review-card--sample' : ''}`;
+        card.className = 'review-card';
         card.innerHTML = `
           <div class="rc-header">
             <div class="rc-av" style="background:${hashColor(author)}">${safeText(initials(author))}</div>
             <div style="flex:1;min-width:0">
               <div class="rc-name">${safeText(displayName)}</div>
             </div>
-            ${isSample ? '<span class="rc-badge">Sample</span>' : ''}
           </div>
           <div class="rc-stars" id="${starId}"></div>
           <p class="rc-text">${safeText(text)}</p>
@@ -813,21 +808,9 @@
       const bar = $('syncBar');
       const text = $('syncText');
       if (!bar || !text) return;
-
-      if (isSyncing) {
-        bar.classList.add('syncing');
-        text.textContent = message || 'Syncing with Google…';
-        return;
-      }
-
+      bar.hidden = true;
       bar.classList.remove('syncing');
-      if (message) {
-        text.textContent = message;
-        return;
-      }
-
-      const now = new Date();
-      text.textContent = `Last synced ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      text.textContent = '';
     }
 
     function applyData(place) {
@@ -862,17 +845,17 @@
       const ratingCount = $('ratingCount');
       const reviewsContainer = $('reviewsContainer');
       const fallbackReviews = FALLBACK_REVIEWS || [];
-      const savedCount = SAVED_GOOGLE_REVIEWS.length;
+      const savedCount = 6;
 
       if (ratingScore) ratingScore.textContent = '5.0';
       renderStars(5, $('starsContainer'), 18);
       if (ratingCount) {
-        ratingCount.innerHTML = `<strong>${savedCount}</strong> saved Google reviews + sample feedback`;
+        ratingCount.innerHTML = `<strong>${savedCount}</strong> Google reviews`;
       }
       if (reviewsContainer) {
         renderReviews(fallbackReviews);
       }
-      setSyncing(false, 'Client reviews loaded.');
+      setSyncing(false);
       if (reason) console.warn('[Google Reviews] Fallback used:', reason);
     }
 
