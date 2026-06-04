@@ -579,44 +579,70 @@
   <script src="js/main.min.js?v=20260603-stars" defer></script>
   <script>
     /* ─────────────────────────────────────────
-       CONFIG
+       GOOGLE BUSINESS LIVE REVIEWS
+       Static GitHub Pages compatible.
+       Keep this API key restricted to your domains in Google Cloud:
+       https://theiqbal.com/* and https://www.theiqbal.com/*
     ───────────────────────────────────────── */
-    const API_KEY  = 'AIzaSyA4sJrzGc_WfcbrHeUyCk-a-tPAthWY8Lw';
-    const PLACE_ID = 'ChIJ804x002Vwsca0wNuu7OqvfE';
-    const FALLBACK_IDS = [
-      'ChIJr-pB038VwscaygNua7Oq-_E',
-      'ChIJ804x002Vwsca0wNuu7OqvfE'
-    ];
+    const GOOGLE_BUSINESS_CONFIG = {
+      apiKey: 'AIzaSyA4sJrzGc_WfcbrHeUyCk-a-tPAthWY8Lw',
+      placeId: 'ChIJ804x002Vwsca0wNuu7OqvfE',
+      syncIntervalMs: 30 * 60 * 1000,
+      requestTimeoutMs: 12000
+    };
 
-    const SYNC_INTERVAL_MS = 5 * 60 * 1000;
+    let googlePlacesService = null;
+    let googleSyncTimer = null;
+    let googleLoadTimeout = null;
+
+    function $(id) {
+      return document.getElementById(id);
+    }
+
+    function safeText(value) {
+      return String(value ?? '').replace(/[&<>'"]/g, (char) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+      }[char]));
+    }
 
     /* ─────────────────────────────────────────
        STAR RENDERER
     ───────────────────────────────────────── */
     function renderStars(rating, el, sz = 18) {
+      if (!el) return;
+      const cleanRating = Math.max(0, Math.min(5, Number(rating) || 0));
       el.innerHTML = '';
       for (let i = 1; i <= 5; i++) {
-        const fill = i <= Math.floor(rating) ? '#fbbc04'
-                   : (i === Math.ceil(rating) && rating % 1 >= 0.4) ? 'url(#h' + i + '_' + sz + ')'
+        const fill = i <= Math.floor(cleanRating) ? '#fbbc04'
+                   : (i === Math.ceil(cleanRating) && cleanRating % 1 >= 0.4) ? 'url(#h' + i + '_' + sz + ')'
                    : '#e2e5e9';
         const ns = 'http://www.w3.org/2000/svg';
         const svg = document.createElementNS(ns, 'svg');
-        svg.setAttribute('viewBox','0 0 24 24');
+        svg.setAttribute('viewBox', '0 0 24 24');
         svg.setAttribute('width', sz);
         svg.setAttribute('height', sz);
+        svg.setAttribute('aria-hidden', 'true');
         if (fill.startsWith('url')) {
-          const defs = document.createElementNS(ns,'defs');
-          const grad = document.createElementNS(ns,'linearGradient');
+          const defs = document.createElementNS(ns, 'defs');
+          const grad = document.createElementNS(ns, 'linearGradient');
           grad.setAttribute('id', `h${i}_${sz}`);
-          const s1 = document.createElementNS(ns,'stop');
-          s1.setAttribute('offset','50%'); s1.setAttribute('stop-color','#fbbc04');
-          const s2 = document.createElementNS(ns,'stop');
-          s2.setAttribute('offset','50%'); s2.setAttribute('stop-color','#e2e5e9');
-          grad.appendChild(s1); grad.appendChild(s2);
-          defs.appendChild(grad); svg.appendChild(defs);
+          const s1 = document.createElementNS(ns, 'stop');
+          s1.setAttribute('offset', '50%');
+          s1.setAttribute('stop-color', '#fbbc04');
+          const s2 = document.createElementNS(ns, 'stop');
+          s2.setAttribute('offset', '50%');
+          s2.setAttribute('stop-color', '#e2e5e9');
+          grad.appendChild(s1);
+          grad.appendChild(s2);
+          defs.appendChild(grad);
+          svg.appendChild(defs);
         }
-        const path = document.createElementNS(ns,'path');
-        path.setAttribute('d','M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z');
+        const path = document.createElementNS(ns, 'path');
+        path.setAttribute('d', 'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z');
         path.setAttribute('fill', fill);
         svg.appendChild(path);
         el.appendChild(svg);
@@ -626,136 +652,188 @@
     /* ─────────────────────────────────────────
        REVIEW CARDS
     ───────────────────────────────────────── */
-    const avColors = ['#4285f4','#ea4335','#34a853','#fbbc04','#9c27b0','#ff5722','#00bcd4','#607d8b'];
-    function hashColor(s) {
-      let h = 0;
-      for (const c of s) h = (h * 31 + c.charCodeAt(0)) | 0;
-      return avColors[Math.abs(h) % avColors.length];
+    const avColors = ['#4285f4', '#ea4335', '#34a853', '#fbbc04', '#9c27b0', '#ff5722', '#00bcd4', '#607d8b'];
+
+    function hashColor(text) {
+      let hash = 0;
+      for (const char of String(text || 'Guest')) hash = (hash * 31 + char.charCodeAt(0)) | 0;
+      return avColors[Math.abs(hash) % avColors.length];
     }
+
     function initials(name) {
-      return (name || '?').split(' ').slice(0,2).map(w => w[0]?.toUpperCase() || '').join('');
+      return (name || 'Guest')
+        .split(' ')
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((word) => word[0]?.toUpperCase() || '')
+        .join('') || 'G';
     }
 
     function renderReviews(reviews) {
-      const ct = document.getElementById('reviewsContainer');
+      const container = $('reviewsContainer');
+      if (!container) return;
+
       if (!reviews || !reviews.length) {
-        ct.innerHTML = `<p style="color:var(--text-muted);font-size:12.5px;padding:6px 2px">No reviews yet — be the first!</p>`;
+        container.innerHTML = '<p style="color:var(--text-muted);font-size:12.5px;padding:6px 2px">No Google review text available yet. Tap View Profile to see the profile on Google.</p>';
         return;
       }
-      ct.innerHTML = '';
-      reviews.slice(0, 5).forEach((r, idx) => {
-        const col  = hashColor(r.author_name || 'X');
-        const ini  = initials(r.author_name);
-        const name = (r.author_name || 'Anonymous').length > 18 ? r.author_name.slice(0,16)+'…' : (r.author_name || 'Anonymous');
-        const text = (r.text || '').trim() || '(Rating only)';
+
+      container.innerHTML = '';
+      reviews.slice(0, 5).forEach((review, index) => {
+        const author = review.author_name || review.authorName || 'Google User';
+        const displayName = author.length > 18 ? `${author.slice(0, 16)}…` : author;
+        const text = (review.text || '').trim() || 'Rating only';
         const card = document.createElement('div');
+        const starId = `rs_${index}_${Date.now()}`;
+
         card.className = 'review-card';
-        const starId = `rs_${idx}_${Date.now()}`;
         card.innerHTML = `
           <div class="rc-header">
-            <div class="rc-av" style="background:${col}">${ini}</div>
+            <div class="rc-av" style="background:${hashColor(author)}">${safeText(initials(author))}</div>
             <div style="flex:1;min-width:0">
-              <div class="rc-name">${name}</div>
+              <div class="rc-name">${safeText(displayName)}</div>
             </div>
           </div>
           <div class="rc-stars" id="${starId}"></div>
-          <p class="rc-text">${text}</p>
+          <p class="rc-text">${safeText(text)}</p>
         `;
-        ct.appendChild(card);
-        renderStars(r.rating || 5, card.querySelector(`#${starId}`), 11);
+        container.appendChild(card);
+        renderStars(review.rating || 5, card.querySelector(`#${starId}`), 11);
       });
     }
 
     /* ─────────────────────────────────────────
        SYNC STATUS UI
     ───────────────────────────────────────── */
-    function setSyncing(on) {
-      const bar = document.getElementById('syncBar');
-      const txt = document.getElementById('syncText');
-      if (on) {
+    function setSyncing(isSyncing, message) {
+      const bar = $('syncBar');
+      const text = $('syncText');
+      if (!bar || !text) return;
+
+      if (isSyncing) {
         bar.classList.add('syncing');
-        txt.textContent = 'Syncing with Google…';
-      } else {
-        bar.classList.remove('syncing');
-        const now = new Date();
-        txt.textContent = `Last synced ${now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`;
+        text.textContent = message || 'Syncing with Google…';
+        return;
       }
+
+      bar.classList.remove('syncing');
+      if (message) {
+        text.textContent = message;
+        return;
+      }
+
+      const now = new Date();
+      text.textContent = `Last synced ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
     }
 
-    /* ─────────────────────────────────────────
-       APPLY DATA TO DOM
-    ───────────────────────────────────────── */
     function applyData(place) {
-      if (place.name) document.getElementById('bizName').textContent = place.name;
-      if (place.types && place.types.length) {
-        const nice = place.types[0].replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
-        document.getElementById('bizType').innerHTML = `<span>${nice}</span>`;
+      if (!place) return applyFallback('Google returned no business data');
+
+      const bizName = $('bizName');
+      const bizType = $('bizType');
+      const ratingScore = $('ratingScore');
+      const ratingCount = $('ratingCount');
+
+      if (place.name && bizName) bizName.textContent = place.name;
+      if (place.types && place.types.length && bizType) {
+        const niceType = place.types[0]
+          .replace(/_/g, ' ')
+          .replace(/\b\w/g, (char) => char.toUpperCase());
+        bizType.innerHTML = `<span>${safeText(niceType)}</span>`;
       }
-      const rating = place.rating || 5;
-      document.getElementById('ratingScore').textContent = Number(rating).toFixed(1);
-      renderStars(rating, document.getElementById('starsContainer'), 18);
-      const count = place.user_ratings_total || 0;
-      document.getElementById('ratingCount').innerHTML =
-        `<strong>${count.toLocaleString()}</strong> Google reviews`;
+
+      const rating = Number(place.rating) || 0;
+      const reviewCount = Number(place.user_ratings_total) || 0;
+
+      if (ratingScore) ratingScore.textContent = rating ? rating.toFixed(1) : '—';
+      renderStars(rating || 5, $('starsContainer'), 18);
+      if (ratingCount) ratingCount.innerHTML = `<strong>${reviewCount.toLocaleString()}</strong> Google reviews`;
+
       renderReviews(place.reviews || []);
       setSyncing(false);
     }
 
-    function applyFallback() {
-      document.getElementById('ratingScore').textContent = '5.0';
-      renderStars(5, document.getElementById('starsContainer'), 18);
-      document.getElementById('ratingCount').innerHTML = `<strong>—</strong> Google reviews`;
-      document.getElementById('reviewsContainer').innerHTML =
-        `<p style="color:var(--text-muted);font-size:12px;padding:4px 2px">
-           Tap <strong>View Profile</strong> to see all reviews on Google.
-         </p>`;
-      const bar = document.getElementById('syncBar');
-      bar.classList.remove('syncing');
-      document.getElementById('syncText').textContent = 'Could not reach Google — check API key';
+    function applyFallback(reason) {
+      const ratingScore = $('ratingScore');
+      const ratingCount = $('ratingCount');
+      const reviewsContainer = $('reviewsContainer');
+
+      if (ratingScore) ratingScore.textContent = '—';
+      renderStars(5, $('starsContainer'), 18);
+      if (ratingCount) ratingCount.innerHTML = '<strong>—</strong> Google reviews';
+      if (reviewsContainer) {
+        reviewsContainer.innerHTML = '<p style="color:var(--text-muted);font-size:12px;padding:4px 2px">Live Google data is not available right now. Tap <strong>View Profile</strong> to see reviews on Google.</p>';
+      }
+      setSyncing(false, reason || 'Could not reach Google');
     }
 
-    let service;
+    function fetchGooglePlace() {
+      if (!googlePlacesService) return applyFallback('Google Places service is not ready');
 
-    function fetchPlace(placeId, onSuccess, onFail) {
-      if (!service) { onFail('service not ready'); return; }
-      service.getDetails(
-        { placeId, fields: ['name','rating','user_ratings_total','reviews','types'] },
+      setSyncing(true);
+      googlePlacesService.getDetails(
+        {
+          placeId: GOOGLE_BUSINESS_CONFIG.placeId,
+          fields: ['name', 'rating', 'user_ratings_total', 'reviews', 'types']
+        },
         (place, status) => {
-          if (status === google.maps.places.PlacesServiceStatus.OK && place) {
-            onSuccess(place);
-          } else {
-            onFail(status);
+          const OK = google.maps.places.PlacesServiceStatus.OK;
+          if (status === OK && place) {
+            applyData(place);
+            return;
           }
+          applyFallback(`Google sync failed: ${status || 'UNKNOWN_ERROR'}`);
         }
       );
     }
 
-    function syncNow() {
-      setSyncing(true);
-      const idsToTry = [PLACE_ID, ...FALLBACK_IDS].filter((v,i,a)=>a.indexOf(v)===i);
-      let idx = 0;
-      function tryNext() {
-        if (idx >= idsToTry.length) { applyFallback(); return; }
-        const id = idsToTry[idx++];
-        fetchPlace(id, applyData, () => tryNext());
-      }
-      tryNext();
-    }
+    window.initGBP = function initGBP() {
+      clearTimeout(googleLoadTimeout);
 
-    window.initGBP = function () {
-      service = new google.maps.places.PlacesService(document.createElement('div'));
-      syncNow();
-      setInterval(syncNow, SYNC_INTERVAL_MS);
+      if (!window.google || !google.maps || !google.maps.places) {
+        applyFallback('Google Places library did not load');
+        return;
+      }
+
+      googlePlacesService = new google.maps.places.PlacesService(document.createElement('div'));
+      fetchGooglePlace();
+
+      clearInterval(googleSyncTimer);
+      googleSyncTimer = setInterval(fetchGooglePlace, GOOGLE_BUSINESS_CONFIG.syncIntervalMs);
     };
 
-    renderStars(5, document.getElementById('starsContainer'), 18);
+    function loadGoogleMapsApi() {
+      renderStars(5, $('starsContainer'), 18);
+
+      const apiKey = GOOGLE_BUSINESS_CONFIG.apiKey;
+      const placeId = GOOGLE_BUSINESS_CONFIG.placeId;
+
+      if (!apiKey || apiKey.includes('YOUR_') || !placeId) {
+        applyFallback('Add Google Maps API key and Place ID');
+        return;
+      }
+
+      googleLoadTimeout = setTimeout(() => {
+        applyFallback('Google sync timeout');
+      }, GOOGLE_BUSINESS_CONFIG.requestTimeoutMs);
+
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(apiKey)}&libraries=places&callback=initGBP&v=weekly`;
+      script.async = true;
+      script.defer = true;
+      script.onerror = () => {
+        clearTimeout(googleLoadTimeout);
+        applyFallback('Google Maps API script blocked or failed');
+      };
+      document.head.appendChild(script);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadGoogleMapsApi, { once: true });
+    } else {
+      loadGoogleMapsApi();
+    }
   </script>
 
-  <!-- Google Maps JS API -->
-  <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4sJrzGc_WfcbrHeUyCk-a-tPAthWY8Lw&libraries=places&callback=initGBP"
-    async defer
-    onerror="applyFallback()">
-  </script>
 </body>
 </html>
