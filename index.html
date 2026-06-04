@@ -425,6 +425,120 @@
     </div>
   </section>
 
+  <section class="section gb-profile-sync-section">
+    <div class="container">
+      <div class="gbp-card">
+        <!-- HEADER -->
+        <div class="gbp-header">
+          <!-- top bar -->
+          <div class="gbp-topbar">
+            <!-- Official Google G icon -->
+            <svg width="28" height="28" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+              <path fill="#FBBC05" d="M10.53 28.59c-.48-1.37-.76-2.84-.76-4.59s.27-3.22.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+              <path fill="none" d="M0 0h48v48H0z"/>
+            </svg>
+            <span class="gbp-topbar-label">Google Business Profile</span>
+            <span class="live-pill"><span class="live-dot"></span>Live</span>
+          </div>
+
+          <!-- profile -->
+          <div class="gbp-profile">
+            <!-- avatar with ring + badge -->
+            <div class="avatar-wrap">
+              <div class="gbp-avatar" id="avatarInitials">
+                <img src="iqbal-hossain.jpg" alt="Iqbal Hossain" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+              </div>
+              <!-- VERIFIED BADGE -->
+              <div class="verified-badge" title="Google Verified Business" aria-label="Google Verified Business">
+                <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3.5 8.5 L6.5 11.5 L12.5 5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+            </div>
+
+            <!-- info -->
+            <div class="gbp-info">
+              <div class="gbp-name-row">
+                <span class="gbp-name" id="bizName">Iqbal Hossain</span>
+                <span class="verified-pill">
+                  <span class="verified-pill-icon">
+                    <svg viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M2 5.2 L4 7.2 L8 3" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                  Verified
+                </span>
+              </div>
+              <p class="gbp-type" id="bizType"><span>Professional Services</span></p>
+              <p class="gbp-meta">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                Worldwide Remote Services &middot; Global Digital Solutions
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- BODY -->
+        <div class="gbp-body">
+          <div class="rating-block">
+            <div class="rating-score" id="ratingScore">—</div>
+            <div class="rating-right">
+              <div class="rating-stars" id="starsContainer"></div>
+              <div class="rating-count" id="ratingCount">
+                <span class="shimmer"></span> Google reviews
+              </div>
+            </div>
+          </div>
+
+          <div class="sync-bar syncing" id="syncBar">
+            <span class="sync-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8zm8 8h2A10 10 0 0 0 12 2v2a8 8 0 0 1 8 8zm-8 8v2a10 10 0 0 0 10-10h-2a8 8 0 0 1-8 8zm-8-8H2a10 10 0 0 0 10 10v-2a8 8 0 0 1-8-8z"/>
+              </svg>
+            </span>
+            <span id="syncText">Syncing with Google…</span>
+          </div>
+
+          <p class="reviews-label">What clients say</p>
+          <div class="reviews-scroll" id="reviewsContainer">
+            <div class="skel-card"></div>
+            <div class="skel-card"></div>
+            <div class="skel-card"></div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="gbp-actions">
+            <a href="https://www.google.com/maps/place/Iqbal+Hossain/@51.2072,-50.1599424,3z/data=!4m8!3m7!1s0x8c5c175fd341eaf3:0xf1bb5ab30e6e043b!8m2!3d51.2072!4d-50.1599424!9m1!1b1!16s%2Fg%2F11nprcw845!18m1!1e1?entry=ttu&g_ep=EgoyMDI2MDYwMS4wIKXMDSoASAFQAw%3D%3D"
+               target="_blank" rel="noopener noreferrer" class="btn-primary-gbp">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="white"/>
+              </svg>
+              Rate &amp; Review
+            </a>
+            <a href="https://maps.app.goo.gl/aY3TDChd9GYxtwPh8"
+               target="_blank" rel="noopener noreferrer" class="btn-outline-gbp">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+              </svg>
+              View Profile
+            </a>
+          </div>
+        </div>
+
+        <div class="gbp-footer">
+          <span class="footer-text">powered by</span>
+          <span class="g-wordmark">
+            <span class="gc-b">G</span><span class="gc-r">o</span><span class="gc-y">o</span><span class="gc-b">g</span><span class="gc-g">l</span><span class="gc-r">e</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
   </main>
 
   <footer class="footer" role="contentinfo">
@@ -463,5 +577,185 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
   <script src="js/main.min.js?v=20260603-stars" defer></script>
+  <script>
+    /* ─────────────────────────────────────────
+       CONFIG
+    ───────────────────────────────────────── */
+    const API_KEY  = 'AIzaSyA4sJrzGc_WfcbrHeUyCk-a-tPAthWY8Lw';
+    const PLACE_ID = 'ChIJ804x002Vwsca0wNuu7OqvfE';
+    const FALLBACK_IDS = [
+      'ChIJr-pB038VwscaygNua7Oq-_E',
+      'ChIJ804x002Vwsca0wNuu7OqvfE'
+    ];
+
+    const SYNC_INTERVAL_MS = 5 * 60 * 1000;
+
+    /* ─────────────────────────────────────────
+       STAR RENDERER
+    ───────────────────────────────────────── */
+    function renderStars(rating, el, sz = 18) {
+      el.innerHTML = '';
+      for (let i = 1; i <= 5; i++) {
+        const fill = i <= Math.floor(rating) ? '#fbbc04'
+                   : (i === Math.ceil(rating) && rating % 1 >= 0.4) ? 'url(#h' + i + '_' + sz + ')'
+                   : '#e2e5e9';
+        const ns = 'http://www.w3.org/2000/svg';
+        const svg = document.createElementNS(ns, 'svg');
+        svg.setAttribute('viewBox','0 0 24 24');
+        svg.setAttribute('width', sz);
+        svg.setAttribute('height', sz);
+        if (fill.startsWith('url')) {
+          const defs = document.createElementNS(ns,'defs');
+          const grad = document.createElementNS(ns,'linearGradient');
+          grad.setAttribute('id', `h${i}_${sz}`);
+          const s1 = document.createElementNS(ns,'stop');
+          s1.setAttribute('offset','50%'); s1.setAttribute('stop-color','#fbbc04');
+          const s2 = document.createElementNS(ns,'stop');
+          s2.setAttribute('offset','50%'); s2.setAttribute('stop-color','#e2e5e9');
+          grad.appendChild(s1); grad.appendChild(s2);
+          defs.appendChild(grad); svg.appendChild(defs);
+        }
+        const path = document.createElementNS(ns,'path');
+        path.setAttribute('d','M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z');
+        path.setAttribute('fill', fill);
+        svg.appendChild(path);
+        el.appendChild(svg);
+      }
+    }
+
+    /* ─────────────────────────────────────────
+       REVIEW CARDS
+    ───────────────────────────────────────── */
+    const avColors = ['#4285f4','#ea4335','#34a853','#fbbc04','#9c27b0','#ff5722','#00bcd4','#607d8b'];
+    function hashColor(s) {
+      let h = 0;
+      for (const c of s) h = (h * 31 + c.charCodeAt(0)) | 0;
+      return avColors[Math.abs(h) % avColors.length];
+    }
+    function initials(name) {
+      return (name || '?').split(' ').slice(0,2).map(w => w[0]?.toUpperCase() || '').join('');
+    }
+
+    function renderReviews(reviews) {
+      const ct = document.getElementById('reviewsContainer');
+      if (!reviews || !reviews.length) {
+        ct.innerHTML = `<p style="color:var(--text-muted);font-size:12.5px;padding:6px 2px">No reviews yet — be the first!</p>`;
+        return;
+      }
+      ct.innerHTML = '';
+      reviews.slice(0, 5).forEach((r, idx) => {
+        const col  = hashColor(r.author_name || 'X');
+        const ini  = initials(r.author_name);
+        const name = (r.author_name || 'Anonymous').length > 18 ? r.author_name.slice(0,16)+'…' : (r.author_name || 'Anonymous');
+        const text = (r.text || '').trim() || '(Rating only)';
+        const card = document.createElement('div');
+        card.className = 'review-card';
+        const starId = `rs_${idx}_${Date.now()}`;
+        card.innerHTML = `
+          <div class="rc-header">
+            <div class="rc-av" style="background:${col}">${ini}</div>
+            <div style="flex:1;min-width:0">
+              <div class="rc-name">${name}</div>
+            </div>
+          </div>
+          <div class="rc-stars" id="${starId}"></div>
+          <p class="rc-text">${text}</p>
+        `;
+        ct.appendChild(card);
+        renderStars(r.rating || 5, card.querySelector(`#${starId}`), 11);
+      });
+    }
+
+    /* ─────────────────────────────────────────
+       SYNC STATUS UI
+    ───────────────────────────────────────── */
+    function setSyncing(on) {
+      const bar = document.getElementById('syncBar');
+      const txt = document.getElementById('syncText');
+      if (on) {
+        bar.classList.add('syncing');
+        txt.textContent = 'Syncing with Google…';
+      } else {
+        bar.classList.remove('syncing');
+        const now = new Date();
+        txt.textContent = `Last synced ${now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`;
+      }
+    }
+
+    /* ─────────────────────────────────────────
+       APPLY DATA TO DOM
+    ───────────────────────────────────────── */
+    function applyData(place) {
+      if (place.name) document.getElementById('bizName').textContent = place.name;
+      if (place.types && place.types.length) {
+        const nice = place.types[0].replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+        document.getElementById('bizType').innerHTML = `<span>${nice}</span>`;
+      }
+      const rating = place.rating || 5;
+      document.getElementById('ratingScore').textContent = Number(rating).toFixed(1);
+      renderStars(rating, document.getElementById('starsContainer'), 18);
+      const count = place.user_ratings_total || 0;
+      document.getElementById('ratingCount').innerHTML =
+        `<strong>${count.toLocaleString()}</strong> Google reviews`;
+      renderReviews(place.reviews || []);
+      setSyncing(false);
+    }
+
+    function applyFallback() {
+      document.getElementById('ratingScore').textContent = '5.0';
+      renderStars(5, document.getElementById('starsContainer'), 18);
+      document.getElementById('ratingCount').innerHTML = `<strong>—</strong> Google reviews`;
+      document.getElementById('reviewsContainer').innerHTML =
+        `<p style="color:var(--text-muted);font-size:12px;padding:4px 2px">
+           Tap <strong>View Profile</strong> to see all reviews on Google.
+         </p>`;
+      const bar = document.getElementById('syncBar');
+      bar.classList.remove('syncing');
+      document.getElementById('syncText').textContent = 'Could not reach Google — check API key';
+    }
+
+    let service;
+
+    function fetchPlace(placeId, onSuccess, onFail) {
+      if (!service) { onFail('service not ready'); return; }
+      service.getDetails(
+        { placeId, fields: ['name','rating','user_ratings_total','reviews','types'] },
+        (place, status) => {
+          if (status === google.maps.places.PlacesServiceStatus.OK && place) {
+            onSuccess(place);
+          } else {
+            onFail(status);
+          }
+        }
+      );
+    }
+
+    function syncNow() {
+      setSyncing(true);
+      const idsToTry = [PLACE_ID, ...FALLBACK_IDS].filter((v,i,a)=>a.indexOf(v)===i);
+      let idx = 0;
+      function tryNext() {
+        if (idx >= idsToTry.length) { applyFallback(); return; }
+        const id = idsToTry[idx++];
+        fetchPlace(id, applyData, () => tryNext());
+      }
+      tryNext();
+    }
+
+    window.initGBP = function () {
+      service = new google.maps.places.PlacesService(document.createElement('div'));
+      syncNow();
+      setInterval(syncNow, SYNC_INTERVAL_MS);
+    };
+
+    renderStars(5, document.getElementById('starsContainer'), 18);
+  </script>
+
+  <!-- Google Maps JS API -->
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4sJrzGc_WfcbrHeUyCk-a-tPAthWY8Lw&libraries=places&callback=initGBP"
+    async defer
+    onerror="applyFallback()">
+  </script>
 </body>
 </html>
