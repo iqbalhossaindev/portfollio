@@ -594,6 +594,14 @@
     let googlePlacesService = null;
     let googleSyncTimer = null;
     let googleLoadTimeout = null;
+    let googleAuthFailed = false;
+
+    window.gm_authFailure = function gmAuthFailure() {
+      googleAuthFailed = true;
+      clearTimeout(googleLoadTimeout);
+      applyFallback('Google API key is blocked. Check website restriction and enabled APIs.');
+      console.error('[Google Reviews] Maps JavaScript API authorization failed. Check HTTP referrer restrictions, billing, and API restrictions.');
+    };
 
     function $(id) {
       return document.getElementById(id);
@@ -795,7 +803,12 @@
         return;
       }
 
-      googlePlacesService = new google.maps.places.PlacesService(document.createElement('div'));
+      const placesNode = document.createElement('div');
+      placesNode.id = 'gbpPlacesServiceNode';
+      placesNode.style.cssText = 'display:none;width:0;height:0;overflow:hidden;';
+      document.body.appendChild(placesNode);
+
+      googlePlacesService = new google.maps.places.PlacesService(placesNode);
       fetchGooglePlace();
 
       clearInterval(googleSyncTimer);
@@ -814,16 +827,18 @@
       }
 
       googleLoadTimeout = setTimeout(() => {
-        applyFallback('Google sync timeout');
+        if (!googlePlacesService && !googleAuthFailed) {
+          applyFallback('Google sync timeout. Check API key, billing, and domain restriction.');
+        }
       }, GOOGLE_BUSINESS_CONFIG.requestTimeoutMs);
 
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(apiKey)}&libraries=places&callback=initGBP&v=weekly`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(apiKey)}&libraries=places&callback=initGBP&v=weekly&loading=async&auth_referrer_policy=origin`;
       script.async = true;
       script.defer = true;
       script.onerror = () => {
         clearTimeout(googleLoadTimeout);
-        applyFallback('Google Maps API script blocked or failed');
+        applyFallback('Google Maps API script blocked or failed. Check browser console and API key restrictions.');
       };
       document.head.appendChild(script);
     }
